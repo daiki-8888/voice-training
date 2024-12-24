@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #f8f9fa;
+  }
+  .header {
+    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+    border-radius: 0 0 2rem 2rem;
+  }
+  .content {
+    background: white;
+    padding: 2rem;
+    margin: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+  }
+  .checklist {
+    list-style: none;
+    padding-left: 0;
+  }
+  .checklist li {
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    background: white;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  .checklist li::before {
+    content: "□";
+    margin-right: 1rem;
+    color: #6366f1;
+  }
+  h1 {
+    font-size: 2rem;
+    margin: 0;
+  }
+  h2 {
+    color: #6366f1;
+    border-bottom: 2px solid #6366f1;
+    padding-bottom: 0.5rem;
+  }
+  h3 {
+    color: #a855f7;
+  }
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+  }
+  .timer {
+    background: #6366f1;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    display: inline-block;
+    margin-left: 1rem;
+  }
+  .progress-box {
+    background: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+  }
+  .progress-box input {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>60日間でマスターする<br>ボイストレーニング完全チェックシート</h1>
+    <p>LINE登録特典</p>
+  </div>
+  
+  <div class="content">
+    <div class="section">
+      <h2>1. ウォーミングアップ <span class="timer">10分</span></h2>
+      <ul class="checklist">
+        <li>声帯ストレッチ：あくびを3回繰り返す</li>
+        <li>リップロール：唇を震わせながら5音階上昇、下降（5回）</li>
+        <li>ハミング練習：ミ→ム→マ→モ→ムで響きを確認（5回ずつ）</li>
+        <li>口のストレッチ：あ行、い行を大きく動かす（各10回）</li>
+        <li>喉の緊張を確認して緩める（手で軽くマッサージ）</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>2. 発声基礎練習 <span class="timer">15分</span></h2>
+      <h3>前の低音（ストレートトーン）</h3>
+      <ul class="checklist">
+        <li>「イ〜」の母音を使い、5音階を下降（10回×3セット）</li>
+        <li>声を揺らさず、ストレートにまっすぐ出す（5秒×10回）</li>
+        <li>鼻に軽くかけた響きを意識する</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>今週の振り返り</h2>
+      <div class="progress-box">
+        <p>達成できた項目</p>
+        <input type="text" placeholder="例：毎日のウォーミングアップを継続できた">
+        
+        <p>改善が必要な点</p>
+        <input type="text" placeholder="例：高音練習の時間が足りていない">
+        
+        <p>来週の目標</p>
+        <input type="text" placeholder="例：裏声の練習時間を増やす">
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>© 2024 ボイストレーニングプログラム</p>
+  </div>
+</body>
+</html>
