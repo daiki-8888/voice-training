@@ -60,11 +60,6 @@
   h3 {
     color: #a855f7;
   }
-  .footer {
-    text-align: center;
-    padding: 2rem;
-    color: #666;
-  }
   .timer {
     background: #6366f1;
     color: white;
@@ -86,17 +81,48 @@
     border: 1px solid #ddd;
     border-radius: 0.25rem;
   }
+  .highlight {
+    background: #f0f0ff;
+    padding: 1rem;
+    border-left: 4px solid #6366f1;
+    margin: 1rem 0;
+  }
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+  }
+  .day-tracker {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  .day {
+    background: white;
+    padding: 0.5rem;
+    text-align: center;
+    border-radius: 0.25rem;
+    border: 1px solid #ddd;
+  }
+  .notes {
+    background: #fff9db;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+  }
 </style>
 </head>
 <body>
   <div class="header">
     <h1>60日間でマスターする<br>ボイストレーニング完全チェックシート</h1>
-    <p>LINE登録特典</p>
+    <p>LINE登録特典 - プロ監修</p>
   </div>
   
   <div class="content">
     <div class="section">
       <h2>1. ウォーミングアップ <span class="timer">10分</span></h2>
+      <p class="highlight">毎日1回必須のエクササイズです</p>
       <ul class="checklist">
         <li>声帯ストレッチ：あくびを3回繰り返す</li>
         <li>リップロール：唇を震わせながら5音階上昇、下降（5回）</li>
@@ -107,32 +133,124 @@
     </div>
 
     <div class="section">
-      <h2>2. 発声基礎練習 <span class="timer">15分</span></h2>
-      <h3>前の低音（ストレートトーン）</h3>
+      <h2>2. 正しい姿勢の確認 <span class="timer">5分</span></h2>
       <ul class="checklist">
-        <li>「イ〜」の母音を使い、5音階を下降（10回×3セット）</li>
-        <li>声を揺らさず、ストレートにまっすぐ出す（5秒×10回）</li>
-        <li>鼻に軽くかけた響きを意識する</li>
+        <li>壁に背をつけて立ち、背中が自然に反っているか確認</li>
+        <li>首が前に出ていないかをチェック（あごを引く）</li>
+        <li>肩甲骨を軽く動かして緩める（肩を上下に10回回す）</li>
+        <li>足の幅を肩幅に開き、均等に体重を乗せる</li>
+        <li>鏡で全身をチェックし、正しい姿勢を維持できているか確認</li>
       </ul>
     </div>
 
     <div class="section">
-      <h2>今週の振り返り</h2>
+      <h2>3. 呼吸法のトレーニング <span class="timer">10分×2回</span></h2>
+      <ul class="checklist">
+        <li>お腹に手を当てて鼻から吸い、ゆっくり口から吐く（5秒吸って10秒吐く×5回）</li>
+        <li>息を吸うときに胸が膨らんでいないか確認</li>
+        <li>息を吐く際に腹筋を意識し、一定の速度で吐き続ける（20秒×5回）</li>
+        <li>ストロー呼吸：ストローを使って長く息を吐く（15秒×3回）</li>
+        <li>吐き切った後の一瞬の吸い込みをスムーズに行う練習（10回）</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>4. 発声練習</h2>
+      
+      <h3>セクション1：低音練習 <span class="timer">10分</span></h3>
+      <p class="highlight">週5日以上実施</p>
+      <div class="notes">前の低音（ストレートトーン）</div>
+      <ul class="checklist">
+        <li>「イ〜」の母音を使い、5音階を下降（10回×3セット）</li>
+        <li>声を揺らさず、ストレートにまっすぐ出す（ロングトーン5秒を10回）</li>
+        <li>鼻に軽くかけた響きを意識（ポイントを確認）</li>
+      </ul>
+
+      <div class="notes">胸の低音（チェストボイス）</div>
+      <ul class="checklist">
+        <li>「イ〜」で胸に響かせる発声（10回×3セット）</li>
+        <li>空気をたっぷり使い、胸が振動する感覚を確認（毎回チェック）</li>
+        <li>音域を少しずつ広げて試す（半音ずつ5回）</li>
+        <li>フーリッシュ（ため息のような発声）で100回</li>
+      </ul>
+
+      <h3>セクション2：裏声練習 <span class="timer">10分</span></h3>
+      <p class="highlight">週3日以上実施</p>
+      <ul class="checklist">
+        <li>唇を尖らせたラッパの形で「ほ〜」と発声（5音下降を10回×3セット）</li>
+        <li>母音をきれいに保ち、喉の力を抜く</li>
+        <li>ロングトーンで息漏れを最小限に（5秒×10回）</li>
+        <li>鏡を使い、口と舌の形を確認</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>5. 音程の確認と修正 <span class="timer">10分</span></h2>
+      <p class="highlight">週4回実施</p>
+      <ul class="checklist">
+        <li>ピアノやアプリで音を確認しながら同じ高さで歌う（10回）</li>
+        <li>単音階を声に出して歌い、録音して聴き直す（5回）</li>
+        <li>録音を聴いて音程がずれている箇所をメモ</li>
+        <li>音程のずれを意識しながら再度録音（3回）</li>
+        <li>上下の跳躍音（ドからソなど）を正確に歌えるか確認（10回）</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>6. リズム感の確認 <span class="timer">5分</span></h2>
+      <p class="highlight">週3回実施</p>
+      <ul class="checklist">
+        <li>メトロノームに合わせて手拍子（60BPM→80BPM→100BPM、各1分）</li>
+        <li>録音した伴奏に合わせて歌い、リズムがずれていないか確認</li>
+        <li>リズムパターン（タ・タタ・タンタンなど）を口ずさむ（各10回）</li>
+        <li>足を使ってリズムを取りながら歌えるか確認（5回）</li>
+        <li>自分の苦手なテンポを意識して練習（各1分）</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>7. 表現力の向上 <span class="timer">10分</span></h2>
+      <p class="highlight">週4回実施</p>
+      <ul class="checklist">
+        <li>歌詞の内容を深く理解して歌う（1曲×5回）</li>
+        <li>声の強弱をつけて表現する（サビ部分×3回）</li>
+        <li>表情を使って歌う（鏡を見ながら1曲×2回）</li>
+        <li>録音を聴いて、聞き手にどんな感情が伝わったか確認</li>
+        <li>自分なりの解釈を加えた独自の歌い方を試す（1曲×3回）</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>週間振り返り</h2>
+      <div class="day-tracker">
+        <div class="day">月</div>
+        <div class="day">火</div>
+        <div class="day">水</div>
+        <div class="day">木</div>
+        <div class="day">金</div>
+        <div class="day">土</div>
+        <div class="day">日</div>
+      </div>
+      
       <div class="progress-box">
-        <p>達成できた項目</p>
-        <input type="text" placeholder="例：毎日のウォーミングアップを継続できた">
+        <p>今週の達成項目</p>
+        <input type="text" placeholder="達成できた練習内容を記入">
         
-        <p>改善が必要な点</p>
-        <input type="text" placeholder="例：高音練習の時間が足りていない">
+        <p>改善点</p>
+        <input type="text" placeholder="次週に向けて改善したい点を記入">
         
-        <p>来週の目標</p>
-        <input type="text" placeholder="例：裏声の練習時間を増やす">
+        <p>次週の目標</p>
+        <input type="text" placeholder="具体的な目標を記入">
+        
+        <p>メモ</p>
+        <input type="text" placeholder="気づいた点や質問事項を記入">
       </div>
     </div>
   </div>
 
   <div class="footer">
-    <p>© 2024 ボイストレーニングプログラム</p>
+    <p>© 2024 プロフェッショナルボイストレーニングプログラム</p>
+    <p>監修：ボイストレーニング専門家</p>
   </div>
 </body>
 </html>
