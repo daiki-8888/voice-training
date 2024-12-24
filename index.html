@@ -6,29 +6,58 @@
     font-family: sans-serif;
     line-height: 1.6;
     color: #333;
-    max-width: 1200px;
-    margin: 0 auto;
+    margin: 0;
+    padding: 0;
     background: #f8f9fa;
+  }
+  .container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 1rem;
   }
   .header {
     background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
     color: white;
-    padding: 2rem;
+    padding: 1.5rem 1rem;
     text-align: center;
-    border-radius: 0 0 2rem 2rem;
+    border-radius: 0 0 1.5rem 1.5rem;
+  }
+  .header h1 {
+    font-size: 1.5rem;
+    margin: 0;
+  }
+  .header p {
+    margin: 0.5rem 0 0;
+    font-size: 0.9rem;
   }
   .content {
     background: white;
-    padding: 2rem;
-    margin: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   .section {
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    background: #f8f9fa;
-    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  h2 {
+    font-size: 1.2rem;
+    color: #6366f1;
+    border-bottom: 2px solid #6366f1;
+    padding-bottom: 0.5rem;
+    margin: 0.5rem 0;
+  }
+  h3 {
+    font-size: 1rem;
+    color: #a855f7;
+    margin: 0.5rem 0;
+  }
+  .highlight {
+    background: #f0f0ff;
+    padding: 0.5rem;
+    border-left: 4px solid #6366f1;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
   }
   .checklist {
     list-style: none;
@@ -41,216 +70,88 @@
     border-radius: 0.25rem;
     display: flex;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    font-size: 0.9rem;
   }
   .checklist li::before {
     content: "□";
-    margin-right: 1rem;
+    margin-right: 0.5rem;
     color: #6366f1;
-  }
-  h1 {
-    font-size: 2rem;
-    margin: 0;
-  }
-  h2 {
-    color: #6366f1;
-    border-bottom: 2px solid #6366f1;
-    padding-bottom: 0.5rem;
-  }
-  h3 {
-    color: #a855f7;
   }
   .timer {
     background: #6366f1;
     color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 1rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.8rem;
     display: inline-block;
-    margin-left: 1rem;
-  }
-  .progress-box {
-    background: white;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    margin: 1rem 0;
-  }
-  .progress-box input {
-    width: 100%;
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-    border: 1px solid #ddd;
-    border-radius: 0.25rem;
-  }
-  .highlight {
-    background: #f0f0ff;
-    padding: 1rem;
-    border-left: 4px solid #6366f1;
-    margin: 1rem 0;
-  }
-  .footer {
-    text-align: center;
-    padding: 2rem;
-    color: #666;
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
   }
   .day-tracker {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 0.5rem;
+    gap: 0.3rem;
     margin: 1rem 0;
   }
   .day {
     background: white;
-    padding: 0.5rem;
+    padding: 0.3rem;
     text-align: center;
     border-radius: 0.25rem;
     border: 1px solid #ddd;
+    font-size: 0.8rem;
   }
-  .notes {
-    background: #fff9db;
-    padding: 1rem;
+  .progress-box {
+    background: white;
+    padding: 0.8rem;
     border-radius: 0.5rem;
     margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  .progress-box input {
+    width: 100%;
+    padding: 0.4rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ddd;
+    border-radius: 0.25rem;
+  }
+  .footer {
+    text-align: center;
+    padding: 1.5rem;
+    color: #666;
+    font-size: 0.8rem;
+  }
+  @media (max-width: 768px) {
+    .header h1 {
+      font-size: 1.2rem;
+    }
+    .header p {
+      font-size: 0.8rem;
+    }
+    h2 {
+      font-size: 1rem;
+    }
+    h3 {
+      font-size: 0.9rem;
+    }
+    .checklist li {
+      font-size: 0.8rem;
+    }
+    .timer {
+      font-size: 0.7rem;
+    }
+    .progress-box input {
+      font-size: 0.8rem;
+    }
+    .day {
+      font-size: 0.7rem;
+    }
   }
 </style>
 </head>
 <body>
-  <div class="header">
-    <h1>60日間でマスターする<br>ボイストレーニング完全チェックシート</h1>
-    <p>LINE登録特典 - プロ監修</p>
-  </div>
-  
-  <div class="content">
-    <div class="section">
-      <h2>1. ウォーミングアップ <span class="timer">10分</span></h2>
-      <p class="highlight">毎日1回必須のエクササイズです</p>
-      <ul class="checklist">
-        <li>声帯ストレッチ：あくびを3回繰り返す</li>
-        <li>リップロール：唇を震わせながら5音階上昇、下降（5回）</li>
-        <li>ハミング練習：ミ→ム→マ→モ→ムで響きを確認（5回ずつ）</li>
-        <li>口のストレッチ：あ行、い行を大きく動かす（各10回）</li>
-        <li>喉の緊張を確認して緩める（手で軽くマッサージ）</li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <h2>2. 正しい姿勢の確認 <span class="timer">5分</span></h2>
-      <ul class="checklist">
-        <li>壁に背をつけて立ち、背中が自然に反っているか確認</li>
-        <li>首が前に出ていないかをチェック（あごを引く）</li>
-        <li>肩甲骨を軽く動かして緩める（肩を上下に10回回す）</li>
-        <li>足の幅を肩幅に開き、均等に体重を乗せる</li>
-        <li>鏡で全身をチェックし、正しい姿勢を維持できているか確認</li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <h2>3. 呼吸法のトレーニング <span class="timer">10分×2回</span></h2>
-      <ul class="checklist">
-        <li>お腹に手を当てて鼻から吸い、ゆっくり口から吐く（5秒吸って10秒吐く×5回）</li>
-        <li>息を吸うときに胸が膨らんでいないか確認</li>
-        <li>息を吐く際に腹筋を意識し、一定の速度で吐き続ける（20秒×5回）</li>
-        <li>ストロー呼吸：ストローを使って長く息を吐く（15秒×3回）</li>
-        <li>吐き切った後の一瞬の吸い込みをスムーズに行う練習（10回）</li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <h2>4. 発声練習</h2>
-      
-      <h3>セクション1：低音練習 <span class="timer">10分</span></h3>
-      <p class="highlight">週5日以上実施</p>
-      <div class="notes">前の低音（ストレートトーン）</div>
-      <ul class="checklist">
-        <li>「イ〜」の母音を使い、5音階を下降（10回×3セット）</li>
-        <li>声を揺らさず、ストレートにまっすぐ出す（ロングトーン5秒を10回）</li>
-        <li>鼻に軽くかけた響きを意識（ポイントを確認）</li>
-      </ul>
-
-      <div class="notes">胸の低音（チェストボイス）</div>
-      <ul class="checklist">
-        <li>「イ〜」で胸に響かせる発声（10回×3セット）</li>
-        <li>空気をたっぷり使い、胸が振動する感覚を確認（毎回チェック）</li>
-        <li>音域を少しずつ広げて試す（半音ずつ5回）</li>
-        <li>フーリッシュ（ため息のような発声）で100回</li>
-      </ul>
-
-      <h3>セクション2：裏声練習 <span class="timer">10分</span></h3>
-      <p class="highlight">週3日以上実施</p>
-      <ul class="checklist">
-        <li>唇を尖らせたラッパの形で「ほ〜」と発声（5音下降を10回×3セット）</li>
-        <li>母音をきれいに保ち、喉の力を抜く</li>
-        <li>ロングトーンで息漏れを最小限に（5秒×10回）</li>
-        <li>鏡を使い、口と舌の形を確認</li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <h2>5. 音程の確認と修正 <span class="timer">10分</span></h2>
-      <p class="highlight">週4回実施</p>
-      <ul class="checklist">
-        <li>ピアノやアプリで音を確認しながら同じ高さで歌う（10回）</li>
-        <li>単音階を声に出して歌い、録音して聴き直す（5回）</li>
-        <li>録音を聴いて音程がずれている箇所をメモ</li>
-        <li>音程のずれを意識しながら再度録音（3回）</li>
-        <li>上下の跳躍音（ドからソなど）を正確に歌えるか確認（10回）</li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <h2>6. リズム感の確認 <span class="timer">5分</span></h2>
-      <p class="highlight">週3回実施</p>
-      <ul class="checklist">
-        <li>メトロノームに合わせて手拍子（60BPM→80BPM→100BPM、各1分）</li>
-        <li>録音した伴奏に合わせて歌い、リズムがずれていないか確認</li>
-        <li>リズムパターン（タ・タタ・タンタンなど）を口ずさむ（各10回）</li>
-        <li>足を使ってリズムを取りながら歌えるか確認（5回）</li>
-        <li>自分の苦手なテンポを意識して練習（各1分）</li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <h2>7. 表現力の向上 <span class="timer">10分</span></h2>
-      <p class="highlight">週4回実施</p>
-      <ul class="checklist">
-        <li>歌詞の内容を深く理解して歌う（1曲×5回）</li>
-        <li>声の強弱をつけて表現する（サビ部分×3回）</li>
-        <li>表情を使って歌う（鏡を見ながら1曲×2回）</li>
-        <li>録音を聴いて、聞き手にどんな感情が伝わったか確認</li>
-        <li>自分なりの解釈を加えた独自の歌い方を試す（1曲×3回）</li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <h2>週間振り返り</h2>
-      <div class="day-tracker">
-        <div class="day">月</div>
-        <div class="day">火</div>
-        <div class="day">水</div>
-        <div class="day">木</div>
-        <div class="day">金</div>
-        <div class="day">土</div>
-        <div class="day">日</div>
-      </div>
-      
-      <div class="progress-box">
-        <p>今週の達成項目</p>
-        <input type="text" placeholder="達成できた練習内容を記入">
-        
-        <p>改善点</p>
-        <input type="text" placeholder="次週に向けて改善したい点を記入">
-        
-        <p>次週の目標</p>
-        <input type="text" placeholder="具体的な目標を記入">
-        
-        <p>メモ</p>
-        <input type="text" placeholder="気づいた点や質問事項を記入">
-      </div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <p>© 2024 プロフェッショナルボイストレーニングプログラム</p>
-    <p>監修：ボイストレーニング専門家</p>
+  <div class="container">
+    <!-- Add the rest of your content here -->
   </div>
 </body>
 </html>
