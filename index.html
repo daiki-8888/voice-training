@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>60日間でマスターするボイトレ完全チェックシート</title>
 <style>
   body {
     font-family: sans-serif;
@@ -46,11 +48,44 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     font-size: 0.9rem;
   }
-  .checklist li::before {
-    content: "□";
-    margin-right: 0.5rem;
-    color: #6366f1;
+  .checklist li label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+    cursor: pointer;
+  }
+  .checklist li input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1rem;
+    height: 1rem;
+    margin: 0.2rem 0 0;
+    border: 2px solid #6366f1;
+    border-radius: 0.2rem;
+    background: white;
+    display: grid;
+    place-items: center;
     flex-shrink: 0;
+    cursor: pointer;
+  }
+  .checklist li input[type="checkbox"]:checked {
+    background: #6366f1;
+  }
+  .checklist li input[type="checkbox"]:checked::after {
+    content: "";
+    width: 0.28rem;
+    height: 0.5rem;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .checklist li input[type="checkbox"]:focus-visible {
+    outline: 2px solid #a855f7;
+    outline-offset: 2px;
+  }
+  .checklist li.is-done {
+    background: #f0f0ff;
   }
   h1 {
     font-size: 1.5rem;
@@ -93,6 +128,40 @@
     font-size: 0.9rem;
     box-sizing: border-box;
   }
+  .progress-block + .progress-block {
+    margin-top: 0.85rem;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+    font-size: 0.9rem;
+  }
+  .progress-meta span:last-child {
+    color: #6366f1;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .progress-track {
+    height: 0.65rem;
+    background: #eceaf6;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #6366f1 0%, #a855f7 100%);
+    border-radius: 999px;
+    transition: width 0.2s ease;
+  }
+  .progress-note {
+    margin: 0.75rem 0 0;
+    color: #666;
+    font-size: 0.8rem;
+  }
   .highlight {
     background: #f0f0ff;
     padding: 0.75rem;
@@ -119,6 +188,46 @@
     border-radius: 0.25rem;
     border: 1px solid #ddd;
     font-size: 0.8rem;
+    font-family: inherit;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    line-height: 1.2;
+  }
+  .day:focus-visible {
+    outline: 2px solid #a855f7;
+    outline-offset: 2px;
+  }
+  .day.is-active {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+    color: #6366f1;
+    font-weight: 700;
+  }
+  .day.is-complete {
+    background: #f0f0ff;
+  }
+  .day-rate {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #6366f1;
+    white-space: nowrap;
+  }
+  .day-mini-track {
+    width: 100%;
+    height: 0.28rem;
+    background: #eceaf6;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .day-mini-fill {
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #6366f1 0%, #a855f7 100%);
   }
   .notes {
     background: #fff9db;
@@ -140,36 +249,59 @@
   
   <div class="content">
     <div class="section">
+      <h2>進捗</h2>
+      <div class="progress-block">
+        <div class="progress-meta">
+          <span id="day-progress-label">今日の進捗</span>
+          <span id="day-progress-text">0 / 0（0%）</span>
+        </div>
+        <div class="progress-track" id="day-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="今日の進捗">
+          <div class="progress-fill" id="day-progress-fill"></div>
+        </div>
+      </div>
+      <div class="progress-block">
+        <div class="progress-meta">
+          <span>今週の進捗</span>
+          <span id="week-progress-text">0 / 0（0%）</span>
+        </div>
+        <div class="progress-track" id="week-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="今週の進捗">
+          <div class="progress-fill" id="week-progress-fill"></div>
+        </div>
+      </div>
+      <p class="progress-note">曜日を選ぶと、その日のチェックを記録できます。バーはチェックのたびに更新されます。</p>
+    </div>
+
+    <div class="section">
       <h2>1. ウォーミングアップ <span class="timer">10分</span></h2>
       <p class="highlight">毎日1回必須のエクササイズです</p>
       <ul class="checklist">
-        <li>声帯ストレッチ：あくびを3回繰り返す</li>
-        <li>リップロール：唇を震わせながら5音階上昇、下降（5回）</li>
-        <li>ハミング練習：ミ→ム→マ→モ→ムで響きを確認（5回ずつ）</li>
-        <li>口のストレッチ：あ行、い行を大きく動かす（各10回）</li>
-        <li>喉の緊張を確認して緩める（手で軽くマッサージ）</li>
+        <li><label><input type="checkbox"><span>声帯ストレッチ：あくびを3回繰り返す</span></label></li>
+        <li><label><input type="checkbox"><span>リップロール：唇を震わせながら5音階上昇、下降（5回）</span></label></li>
+        <li><label><input type="checkbox"><span>ハミング練習：ミ→ム→マ→モ→ムで響きを確認（5回ずつ）</span></label></li>
+        <li><label><input type="checkbox"><span>口のストレッチ：あ行、い行を大きく動かす（各10回）</span></label></li>
+        <li><label><input type="checkbox"><span>喉の緊張を確認して緩める（手で軽くマッサージ）</span></label></li>
       </ul>
     </div>
 
     <div class="section">
       <h2>2. 正しい姿勢の確認 <span class="timer">5分</span></h2>
       <ul class="checklist">
-        <li>壁に背をつけて立ち、背中が自然に反っているか確認</li>
-        <li>首が前に出ていないかをチェック（あごを引く）</li>
-        <li>肩甲骨を軽く動かして緩める（肩を上下に10回回す）</li>
-        <li>足の幅を肩幅に開き、均等に体重を乗せる</li>
-        <li>鏡で全身をチェックし、正しい姿勢を維持できているか確認</li>
+        <li><label><input type="checkbox"><span>壁に背をつけて立ち、背中が自然に反っているか確認</span></label></li>
+        <li><label><input type="checkbox"><span>首が前に出ていないかをチェック（あごを引く）</span></label></li>
+        <li><label><input type="checkbox"><span>肩甲骨を軽く動かして緩める（肩を上下に10回回す）</span></label></li>
+        <li><label><input type="checkbox"><span>足の幅を肩幅に開き、均等に体重を乗せる</span></label></li>
+        <li><label><input type="checkbox"><span>鏡で全身をチェックし、正しい姿勢を維持できているか確認</span></label></li>
       </ul>
     </div>
 
     <div class="section">
       <h2>3. 呼吸法のトレーニング <span class="timer">10分×2回</span></h2>
       <ul class="checklist">
-        <li>お腹に手を当てて鼻から吸い、ゆっくり口から吐く（5秒吸って10秒吐く×5回）</li>
-        <li>息を吸うときに胸が膨らんでいないか確認</li>
-        <li>息を吐く際に腹筋を意識し、一定の速度で吐き続ける（20秒×5回）</li>
-        <li>ストロー呼吸：ストローを使って長く息を吐く（15秒×3回）</li>
-        <li>吐き切った後の一瞬の吸い込みをスムーズに行う練習（10回）</li>
+        <li><label><input type="checkbox"><span>お腹に手を当てて鼻から吸い、ゆっくり口から吐く（5秒吸って10秒吐く×5回）</span></label></li>
+        <li><label><input type="checkbox"><span>息を吸うときに胸が膨らんでいないか確認</span></label></li>
+        <li><label><input type="checkbox"><span>息を吐く際に腹筋を意識し、一定の速度で吐き続ける（20秒×5回）</span></label></li>
+        <li><label><input type="checkbox"><span>ストロー呼吸：ストローを使って長く息を吐く（15秒×3回）</span></label></li>
+        <li><label><input type="checkbox"><span>吐き切った後の一瞬の吸い込みをスムーズに行う練習（10回）</span></label></li>
       </ul>
     </div>
 
@@ -180,26 +312,26 @@
       <p class="highlight">週5日以上実施</p>
       <div class="notes">前の低音（ストレートトーン）</div>
       <ul class="checklist">
-        <li>「イ〜」の母音を使い、5音階を下降（10回×3セット）</li>
-        <li>声を揺らさず、ストレートにまっすぐ出す（ロングトーン5秒を10回）</li>
-        <li>鼻に軽くかけた響きを意識（ポイントを確認）</li>
+        <li><label><input type="checkbox"><span>「イ〜」の母音を使い、5音階を下降（10回×3セット）</span></label></li>
+        <li><label><input type="checkbox"><span>声を揺らさず、ストレートにまっすぐ出す（ロングトーン5秒を10回）</span></label></li>
+        <li><label><input type="checkbox"><span>鼻に軽くかけた響きを意識（ポイントを確認）</span></label></li>
       </ul>
 
       <div class="notes">胸の低音（チェストボイス）</div>
       <ul class="checklist">
-        <li>「イ〜」で胸に響かせる発声（10回×3セット）</li>
-        <li>空気をたっぷり使い、胸が振動する感覚を確認（毎回チェック）</li>
-        <li>音域を少しずつ広げて試す（半音ずつ5回）</li>
-        <li>フーリッシュ（ため息のような発声）で100回</li>
+        <li><label><input type="checkbox"><span>「イ〜」で胸に響かせる発声（10回×3セット）</span></label></li>
+        <li><label><input type="checkbox"><span>空気をたっぷり使い、胸が振動する感覚を確認（毎回チェック）</span></label></li>
+        <li><label><input type="checkbox"><span>音域を少しずつ広げて試す（半音ずつ5回）</span></label></li>
+        <li><label><input type="checkbox"><span>フーリッシュ（ため息のような発声）で100回</span></label></li>
       </ul>
 
       <h3>セクション2：裏声練習 <span class="timer">10分</span></h3>
       <p class="highlight">週3日以上実施</p>
       <ul class="checklist">
-        <li>唇を尖らせたラッパの形で「ほ〜」と発声（5音下降を10回×3セット）</li>
-        <li>母音をきれいに保ち、喉の力を抜く</li>
-        <li>ロングトーンで息漏れを最小限に（5秒×10回）</li>
-        <li>鏡を使い、口と舌の形を確認</li>
+        <li><label><input type="checkbox"><span>唇を尖らせたラッパの形で「ほ〜」と発声（5音下降を10回×3セット）</span></label></li>
+        <li><label><input type="checkbox"><span>母音をきれいに保ち、喉の力を抜く</span></label></li>
+        <li><label><input type="checkbox"><span>ロングトーンで息漏れを最小限に（5秒×10回）</span></label></li>
+        <li><label><input type="checkbox"><span>鏡を使い、口と舌の形を確認</span></label></li>
       </ul>
     </div>
 
@@ -207,11 +339,11 @@
       <h2>5. 音程の確認と修正 <span class="timer">10分</span></h2>
       <p class="highlight">週4回実施</p>
       <ul class="checklist">
-        <li>ピアノやアプリで音を確認しながら同じ高さで歌う（10回）</li>
-        <li>単音階を声に出して歌い、録音して聴き直す（5回）</li>
-        <li>録音を聴いて音程がずれている箇所をメモ</li>
-        <li>音程のずれを意識しながら再度録音（3回）</li>
-        <li>上下の跳躍音（ドからソなど）を正確に歌えるか確認（10回）</li>
+        <li><label><input type="checkbox"><span>ピアノやアプリで音を確認しながら同じ高さで歌う（10回）</span></label></li>
+        <li><label><input type="checkbox"><span>単音階を声に出して歌い、録音して聴き直す（5回）</span></label></li>
+        <li><label><input type="checkbox"><span>録音を聴いて音程がずれている箇所をメモ</span></label></li>
+        <li><label><input type="checkbox"><span>音程のずれを意識しながら再度録音（3回）</span></label></li>
+        <li><label><input type="checkbox"><span>上下の跳躍音（ドからソなど）を正確に歌えるか確認（10回）</span></label></li>
       </ul>
     </div>
 
@@ -219,11 +351,11 @@
       <h2>6. リズム感の確認 <span class="timer">5分</span></h2>
       <p class="highlight">週3回実施</p>
       <ul class="checklist">
-        <li>メトロノームに合わせて手拍子（60BPM→80BPM→100BPM、各1分）</li>
-        <li>録音した伴奏に合わせて歌い、リズムがずれていないか確認</li>
-        <li>リズムパターン（タ・タタ・タンタンなど）を口ずさむ（各10回）</li>
-        <li>足を使ってリズムを取りながら歌えるか確認（5回）</li>
-        <li>自分の苦手なテンポを意識して練習（各1分）</li>
+        <li><label><input type="checkbox"><span>メトロノームに合わせて手拍子（60BPM→80BPM→100BPM、各1分）</span></label></li>
+        <li><label><input type="checkbox"><span>録音した伴奏に合わせて歌い、リズムがずれていないか確認</span></label></li>
+        <li><label><input type="checkbox"><span>リズムパターン（タ・タタ・タンタンなど）を口ずさむ（各10回）</span></label></li>
+        <li><label><input type="checkbox"><span>足を使ってリズムを取りながら歌えるか確認（5回）</span></label></li>
+        <li><label><input type="checkbox"><span>自分の苦手なテンポを意識して練習（各1分）</span></label></li>
       </ul>
     </div>
 
@@ -231,24 +363,24 @@
       <h2>7. 表現力の向上 <span class="timer">10分</span></h2>
       <p class="highlight">週4回実施</p>
       <ul class="checklist">
-        <li>歌詞の内容を深く理解して歌う（1曲×5回）</li>
-        <li>声の強弱をつけて表現する（サビ部分×3回）</li>
-        <li>表情を使って歌う（鏡を見ながら1曲×2回）</li>
-        <li>録音を聴いて、聞き手にどんな感情が伝わったか確認</li>
-        <li>自分なりの解釈を加えた独自の歌い方を試す（1曲×3回）</li>
+        <li><label><input type="checkbox"><span>歌詞の内容を深く理解して歌う（1曲×5回）</span></label></li>
+        <li><label><input type="checkbox"><span>声の強弱をつけて表現する（サビ部分×3回）</span></label></li>
+        <li><label><input type="checkbox"><span>表情を使って歌う（鏡を見ながら1曲×2回）</span></label></li>
+        <li><label><input type="checkbox"><span>録音を聴いて、聞き手にどんな感情が伝わったか確認</span></label></li>
+        <li><label><input type="checkbox"><span>自分なりの解釈を加えた独自の歌い方を試す（1曲×3回）</span></label></li>
       </ul>
     </div>
 
     <div class="section">
       <h2>週間振り返り</h2>
       <div class="day-tracker">
-        <div class="day">月</div>
-        <div class="day">火</div>
-        <div class="day">水</div>
-        <div class="day">木</div>
-        <div class="day">金</div>
-        <div class="day">土</div>
-        <div class="day">日</div>
+        <button type="button" class="day" data-day="0"><span class="day-name">月</span><span class="day-rate">0%</span><span class="day-mini-track" aria-hidden="true"><span class="day-mini-fill"></span></span></button>
+        <button type="button" class="day" data-day="1"><span class="day-name">火</span><span class="day-rate">0%</span><span class="day-mini-track" aria-hidden="true"><span class="day-mini-fill"></span></span></button>
+        <button type="button" class="day" data-day="2"><span class="day-name">水</span><span class="day-rate">0%</span><span class="day-mini-track" aria-hidden="true"><span class="day-mini-fill"></span></span></button>
+        <button type="button" class="day" data-day="3"><span class="day-name">木</span><span class="day-rate">0%</span><span class="day-mini-track" aria-hidden="true"><span class="day-mini-fill"></span></span></button>
+        <button type="button" class="day" data-day="4"><span class="day-name">金</span><span class="day-rate">0%</span><span class="day-mini-track" aria-hidden="true"><span class="day-mini-fill"></span></span></button>
+        <button type="button" class="day" data-day="5"><span class="day-name">土</span><span class="day-rate">0%</span><span class="day-mini-track" aria-hidden="true"><span class="day-mini-fill"></span></span></button>
+        <button type="button" class="day" data-day="6"><span class="day-name">日</span><span class="day-rate">0%</span><span class="day-mini-track" aria-hidden="true"><span class="day-mini-fill"></span></span></button>
       </div>
       
       <div class="progress-box">
@@ -271,5 +403,167 @@
     <p>© ボイトレ完全チェックシート</p>
     <p>監修：歌唱コーチダイキ</p>
   </div>
+
+  <script>
+    (function () {
+      var STORAGE_KEY = "voitre-checksheet";
+      var DAY_NAMES = ["月", "火", "水", "木", "金", "土", "日"];
+      var DAY_LABELS = ["月曜", "火曜", "水曜", "木曜", "金曜", "土曜", "日曜"];
+      var checkboxes = Array.prototype.slice.call(document.querySelectorAll(".checklist input[type='checkbox']"));
+      var dayButtons = Array.prototype.slice.call(document.querySelectorAll(".day-tracker .day"));
+      var noteInputs = Array.prototype.slice.call(document.querySelectorAll(".progress-box input[type='text']"));
+      var itemCount = checkboxes.length;
+      var dayLabel = document.getElementById("day-progress-label");
+      var dayText = document.getElementById("day-progress-text");
+      var dayFill = document.getElementById("day-progress-fill");
+      var dayBar = document.getElementById("day-progress-bar");
+      var weekText = document.getElementById("week-progress-text");
+      var weekFill = document.getElementById("week-progress-fill");
+      var weekBar = document.getElementById("week-progress-bar");
+
+      function todayIndex() {
+        return (new Date().getDay() + 6) % 7;
+      }
+
+      function emptyDays() {
+        var days = [];
+        for (var d = 0; d < 7; d++) {
+          var flags = [];
+          for (var i = 0; i < itemCount; i++) flags.push(false);
+          days.push(flags);
+        }
+        return days;
+      }
+
+      function loadState() {
+        var days = emptyDays();
+        var notes = [];
+        var activeDay = todayIndex();
+        for (var n = 0; n < noteInputs.length; n++) notes.push("");
+        try {
+          var raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return { activeDay: activeDay, days: days, notes: notes };
+          var saved = JSON.parse(raw);
+          if (saved && typeof saved.activeDay === "number" && saved.activeDay >= 0 && saved.activeDay < 7) {
+            activeDay = saved.activeDay;
+          }
+          if (saved && Array.isArray(saved.days)) {
+            for (var d = 0; d < 7; d++) {
+              var src = saved.days[d];
+              if (!Array.isArray(src)) continue;
+              for (var i = 0; i < itemCount; i++) days[d][i] = !!src[i];
+            }
+          }
+          if (saved && Array.isArray(saved.notes)) {
+            for (var j = 0; j < notes.length; j++) {
+              if (typeof saved.notes[j] === "string") notes[j] = saved.notes[j];
+            }
+          }
+        } catch (e) {}
+        return { activeDay: activeDay, days: days, notes: notes };
+      }
+
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (e) {}
+      }
+
+      function stats(flags) {
+        var total = flags.length;
+        var checked = 0;
+        for (var i = 0; i < total; i++) if (flags[i]) checked++;
+        var ratio = total ? checked / total : 0;
+        return {
+          checked: checked,
+          total: total,
+          ratio: ratio,
+          percent: Math.round(ratio * 100)
+        };
+      }
+
+      function formatCount(s) {
+        var percentLabel = s.checked > 0 && s.percent === 0 ? "1%未満" : s.percent + "%";
+        return s.checked + " / " + s.total + "（" + percentLabel + "）";
+      }
+
+      function applyActiveDay() {
+        var flags = state.days[state.activeDay];
+        checkboxes.forEach(function (box, i) {
+          box.checked = !!flags[i];
+          box.closest("li").classList.toggle("is-done", box.checked);
+        });
+        noteInputs.forEach(function (input, i) {
+          input.value = state.notes[i] || "";
+        });
+      }
+
+      function render() {
+        var day = stats(state.days[state.activeDay]);
+        var weekFlags = [];
+        state.days.forEach(function (flags) {
+          weekFlags = weekFlags.concat(flags);
+        });
+        var week = stats(weekFlags);
+        var name = DAY_NAMES[state.activeDay];
+        var label = state.activeDay === todayIndex()
+          ? "今日の進捗（" + name + "）"
+          : DAY_LABELS[state.activeDay] + "の進捗";
+
+        dayLabel.textContent = label;
+        dayText.textContent = formatCount(day);
+        dayFill.style.width = (day.ratio * 100) + "%";
+        dayBar.setAttribute("aria-valuenow", String(day.percent));
+        dayBar.setAttribute("aria-valuetext", dayText.textContent);
+        dayBar.setAttribute("aria-label", label);
+
+        weekText.textContent = formatCount(week);
+        weekFill.style.width = (week.ratio * 100) + "%";
+        weekBar.setAttribute("aria-valuenow", String(week.percent));
+        weekBar.setAttribute("aria-valuetext", weekText.textContent);
+
+        dayButtons.forEach(function (btn, i) {
+          var s = stats(state.days[i]);
+          btn.classList.toggle("is-active", i === state.activeDay);
+          btn.classList.toggle("is-complete", s.total > 0 && s.checked === s.total);
+          btn.setAttribute("aria-pressed", i === state.activeDay ? "true" : "false");
+          btn.querySelector(".day-rate").textContent = s.percent + "%";
+          btn.querySelector(".day-mini-fill").style.width = (s.ratio * 100) + "%";
+          btn.setAttribute("aria-label", DAY_LABELS[i] + " " + formatCount(s));
+        });
+      }
+
+      var state = loadState();
+
+      checkboxes.forEach(function (box, i) {
+        box.addEventListener("change", function () {
+          state.days[state.activeDay][i] = box.checked;
+          box.closest("li").classList.toggle("is-done", box.checked);
+          saveState();
+          render();
+        });
+      });
+
+      dayButtons.forEach(function (btn, i) {
+        btn.addEventListener("click", function () {
+          if (state.activeDay === i) return;
+          state.activeDay = i;
+          applyActiveDay();
+          saveState();
+          render();
+        });
+      });
+
+      noteInputs.forEach(function (input, i) {
+        input.addEventListener("input", function () {
+          state.notes[i] = input.value;
+          saveState();
+        });
+      });
+
+      applyActiveDay();
+      render();
+    })();
+  </script>
 </body>
 </html>
