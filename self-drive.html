@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6366f1">
+<title>今日の1手</title>
+<style>
+  :root {
+    --indigo: #6366f1;
+    --purple: #a855f7;
+    --grad: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    --ink: #333;
+    --muted: #5c6170;
+    --bg: #f8f9fa;
+    --card: #fff;
+    --line: #e6e4ef;
+    --soft: #f0f0ff;
+    --ok: #0f766e;
+    --ok-bg: #e7f7f3;
+    --warn: #9a6700;
+    --warn-bg: #fff7e6;
+    --bad: #be123c;
+    --bad-bg: #fff1f2;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, sans-serif;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--bg);
+    font-size: 16px;
+  }
+  button, input { font-family: inherit; }
+  .app {
+    width: min(480px, 100%);
+    margin: 0 auto;
+    min-height: 100dvh;
+    background: var(--bg);
+    position: relative;
+  }
+  .header {
+    background: var(--grad);
+    color: white;
+    padding: 1.15rem 1.1rem 1.25rem;
+    border-radius: 0 0 1rem 1rem;
+    text-align: center;
+  }
+  .brand {
+    margin: 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    opacity: 0.92;
+  }
+  h1 {
+    font-size: 1.55rem;
+    margin: 0.2rem 0 0;
+    line-height: 1.35;
+    font-weight: 800;
+  }
+  .header .lead {
+    margin: 0.35rem 0 0;
+    font-size: 0.92rem;
+    opacity: 0.95;
+  }
+  .tabs {
+    display: flex;
+    gap: 0.35rem;
+    padding: 0.75rem 0.7rem 0.15rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs button {
+    flex: 1 0 auto;
+    border: 0;
+    background: white;
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .tabs button[aria-selected="true"] {
+    background: var(--grad);
+    color: white;
+  }
+  .tabs button:focus-visible,
+  .btn:focus-visible,
+  .play-btn:focus-visible,
+  .file-label:focus-within {
+    outline: 3px solid #c4b5fd;
+    outline-offset: 2px;
+  }
+  .tabs button.is-recording::after {
+    content: "";
+    display: inline-block;
+    width: 0.45rem;
+    height: 0.45rem;
+    margin-left: 0.35rem;
+    border-radius: 50%;
+    background: #fb7185;
+    vertical-align: middle;
+  }
+  .panel { padding: 0.85rem 0.75rem 1.4rem; }
+  .date-line {
+    margin: 0.15rem 0.15rem 0.55rem;
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+  .kicker-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .kicker {
+    color: var(--indigo);
+    font-weight: 800;
+    font-size: 0.82rem;
+  }
+  .timer-pill {
+    background: var(--indigo);
+    color: white;
+    padding: 0.15rem 0.55rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+  .mission-title {
+    color: #4338ca;
+    font-size: 1.7rem;
+    line-height: 1.3;
+    margin: 0.35rem 0 0.4rem;
+  }
+  .detail { margin: 0; font-size: 0.98rem; }
+  .source {
+    margin: 0.55rem 0 0;
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem;
+    margin: 0.75rem 0;
+  }
+  .stat {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 0.75rem 0.8rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+  .stat span {
+    display: block;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+  .stat b {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 1.55rem;
+    line-height: 1.2;
+    color: var(--indigo);
+  }
+  .week-card { margin-bottom: 0.8rem; }
+  .week-card p {
+    margin: 0 0 0.45rem;
+    font-weight: 800;
+    color: var(--indigo);
+    font-size: 0.9rem;
+  }
+  .day-tracker {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.3rem;
+  }
+  .dot {
+    background: white;
+    text-align: center;
+    border-radius: 0.45rem;
+    border: 1px solid #ddd;
+    padding: 0.4rem 0;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #6b7280;
+  }
+  .dot.done {
+    background: var(--indigo);
+    border-color: var(--indigo);
+    color: white;
+  }
+  .dot.skipped {
+    background: var(--warn-bg);
+    border-color: #f3d7a1;
+    color: var(--warn);
+  }
+  .dot.is-today { box-shadow: inset 0 0 0 2px var(--purple); }
+  .dot.done.is-today { box-shadow: inset 0 0 0 2px #fff, inset 0 0 0 4px var(--purple); }
+  .btn {
+    display: block;
+    width: 100%;
+    border: 0;
+    border-radius: 0.85rem;
+    padding: 0.95rem 1rem;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .btn-primary {
+    background: var(--grad);
+    color: white;
+    box-shadow: 0 8px 18px rgba(99, 102, 241, 0.28);
+  }
+  .btn-secondary {
+    margin-top: 0.55rem;
+    background: white;
+    color: #4f46e5;
+    border: 1.5px solid #d9d6fe;
+  }
+  .btn-ghost {
+    margin-top: 0.45rem;
+    background: transparent;
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .hint {
+    color: var(--muted);
+    font-size: 0.84rem;
+    margin: 0.75rem 0.15rem 0;
+  }
+  .banner {
+    background: var(--ok-bg);
+    color: var(--ok);
+    border-radius: 0.7rem;
+    padding: 0.7rem 0.8rem;
+    font-weight: 700;
+    margin: 0 0 0.7rem;
+  }
+  .banner.bad {
+    background: var(--bad-bg);
+    color: var(--bad);
+    font-weight: 700;
+  }
+  .banner.warn {
+    background: var(--warn-bg);
+    color: var(--warn);
+  }
+  h2 {
+    color: var(--indigo);
+    border-bottom: 2px solid var(--indigo);
+    padding-bottom: 0.25rem;
+    font-size: 1.2rem;
+    margin: 0.15rem 0 0.7rem;
+  }
+  h2.mission-title {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .note { color: var(--muted); margin: 0.2rem 0 0.8rem; font-size: 0.92rem; }
+  .rec-stage { text-align: center; padding: 0.4rem 0 0.2rem; }
+  .ring {
+    width: 168px;
+    height: 168px;
+    margin: 0.2rem auto 0.6rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: conic-gradient(var(--indigo) calc(var(--p, 0) * 360deg), #e7e5f4 0);
+  }
+  .orb {
+    width: 132px;
+    height: 132px;
+    border-radius: 50%;
+    border: 6px solid white;
+    background: var(--grad);
+    color: white;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(99, 102, 241, 0.28);
+  }
+  .orb.live { background: #e11d48; }
+  .clock {
+    font-variant-numeric: tabular-nums;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: 0.03em;
+    color: #312e81;
+  }
+  .remain { margin: 0.1rem 0 0.8rem; color: var(--muted); font-weight: 700; }
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin: 0.9rem 0 0.7rem;
+  }
+  .divider::before, .divider::after {
+    content: "";
+    height: 1px;
+    background: var(--line);
+    flex: 1;
+  }
+  .file-label {
+    position: relative;
+    margin-top: 0;
+  }
+  .file-label input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+  .clip {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 0.75rem 0.8rem;
+    margin: 0 0 0.55rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  }
+  .card .clip,
+  .day-body .clip {
+    background: #f8f9fa;
+    box-shadow: none;
+  }
+  .clip-top {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .clip-top .meta, .day-body .meta {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .play-btn {
+    flex: 0 0 auto;
+    border: 0;
+    background: var(--soft);
+    color: #4f46e5;
+    font-weight: 800;
+    border-radius: 999px;
+    min-width: 4.6rem;
+    min-height: 2.6rem;
+    padding: 0.4rem 0.75rem;
+    cursor: pointer;
+  }
+  audio { width: 100%; margin-top: 0.55rem; height: 40px; }
+  .list-title {
+    margin: 1rem 0 0.45rem;
+    font-size: 0.95rem;
+    color: #4338ca;
+  }
+  .empty {
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1rem 0.9rem;
+    color: var(--muted);
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  .week-range { font-weight: 800; margin: 0 0 0.25rem; }
+  .summary { margin: 0 0 0.75rem; }
+  .day-row {
+    display: flex;
+    gap: 0.7rem;
+    background: white;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  .day-row.is-today { box-shadow: inset 0 0 0 2px var(--indigo); }
+  .day-row.future { opacity: 0.72; }
+  .day-chip {
+    width: 2.5rem;
+    height: 2.5rem;
+    flex: 0 0 auto;
+    border-radius: 0.7rem;
+    background: var(--soft);
+    color: #4f46e5;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+  }
+  .day-body { flex: 1; min-width: 0; }
+  .day-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    border-radius: 999px;
+    padding: 0.12rem 0.5rem;
+    background: #f3f4f6;
+    color: #6b7280;
+    white-space: nowrap;
+  }
+  .badge.done { background: var(--ok-bg); color: var(--ok); }
+  .badge.skipped { background: var(--warn-bg); color: var(--warn); }
+  .mission-name { font-weight: 700; margin-top: 0.1rem; }
+  .footer {
+    text-align: center;
+    padding: 0.3rem 1rem 1.4rem;
+    color: #666;
+    font-size: 0.78rem;
+  }
+  .footer a { color: var(--indigo); }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+  @media (min-width: 560px) {
+    body { padding: 1.25rem 0 1.5rem; }
+    .app {
+      min-height: calc(100dvh - 2.75rem);
+      border-radius: 1.25rem;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(79, 70, 229, 0.12);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .orb.live { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <p class="brand">歌唱コーチダイキ監修</p>
+      <h1>今日の1手</h1>
+      <p class="lead">LINEを待たずに、30秒だけ練習して完了。</p>
+    </header>
+    <nav class="tabs" role="tablist" aria-label="画面">
+      <button type="button" role="tab" id="tab-today" aria-controls="panel-today" aria-selected="true" data-action="tab" data-tab="today">今日の1手</button>
+      <button type="button" role="tab" id="tab-record" aria-controls="panel-record" aria-selected="false" tabindex="-1" data-action="tab" data-tab="record">録音</button>
+      <button type="button" role="tab" id="tab-review" aria-controls="panel-review" aria-selected="false" tabindex="-1" data-action="tab" data-tab="review">講師の週レビュー</button>
+    </nav>
+    <main id="panels"></main>
+    <p id="live" class="sr-only" aria-live="polite"></p>
+    <footer class="footer">
+      <p>この端末の中だけに保存されます。</p>
+      <p><a href="index.html">チェックシートを見る</a></p>
+    </footer>
+  </div>
+  <noscript><p style="padding:1rem">このページを使うには、JavaScriptをオンにしてください。</p></noscript>
+<script>
+(function () {
+  "use strict";
+
+  var KEY = "voitre-self-drive-v1";
+  var MAX_MS = 30000;
+  var EPOCH = "2026-01-01";
+  var WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
+
+  // One small slice of the check sheet, rotating by calendar day.
+  var MISSIONS = [
+    {
+      id: "liproll",
+      title: "リップロール",
+      detail: "唇をゆるめて震わせながら、5音上げて5音下げる。",
+      source: "ウォーミングアップ"
+    },
+    {
+      id: "humming",
+      title: "ハミング",
+      detail: "ミ→ム→マ→モ→ムの順で、鼻のあたりに響きを集める。",
+      source: "ウォーミングアップ"
+    },
+    {
+      id: "posture",
+      title: "姿勢チェック",
+      detail: "あごを引いて肩の力を抜く。壁に背をつけて、まっすぐ立つ。",
+      source: "正しい姿勢の確認"
+    },
+    {
+      id: "yawn",
+      title: "声帯ストレッチ",
+      detail: "あくびをするように口を開けて、喉の力を3回抜く。",
+      source: "ウォーミングアップ"
+    },
+    {
+      id: "straw",
+      title: "ストロー呼吸",
+      detail: "細く長く、一定の速さで息を吐く。途中で止めない。",
+      source: "呼吸法のトレーニング"
+    },
+    {
+      id: "head",
+      title: "裏声の「ほ〜」",
+      detail: "唇を少し尖らせて「ほ〜」。力まず、小さく5音下がる。",
+      source: "裏声練習"
+    },
+    {
+      id: "pitch",
+      title: "音程の確認",
+      detail: "出しやすい高さで、声を揺らさずまっすぐ出す。",
+      source: "音程の確認と修正"
+    }
+  ];
+
+  var state = emptyState();
+  var today = resolveToday();
+  var tab = "today";
+  var recMode = "idle";
+  var mediaRecorder = null;
+  var recordStream = null;
+  var chunks = [];
+  var recordTick = null;
+  var recordStarted = 0;
+  var elapsedMs = 0;
+  var pendingBlob = null;
+  var pendingUrl = "";
+  var pendingName = "";
+  var errorMsg = "";
+  var successMsg = "";
+  var skipConfirm = false;
+  var saving = false;
+  var takeSeq = 0;
+  var blobUrlCache = new Map();
+
+  function emptyState() {
+    return { days: {}, recordings: [] };
+  }
+
+  function tokyoYMD(date) {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Tokyo",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(date);
+  }
+
+  function resolveToday() {
+    var q = new URLSearchParams(location.search).get("date");
+    if (q && /^\d{4}-\d{2}-\d{2}$/.test(q)) {
+      var parts = q.split("-").map(Number);
+      var dt = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+      if (
+        dt.getUTCFullYear() === parts[0] &&
+        dt.getUTCMonth() === parts[1] - 1 &&
+        dt.getUTCDate() === parts[2]
+      ) {
+        return q;
+      }
+    }
+    return tokyoYMD(new Date());
+  }
+
+  function addDays(ymd, n) {
+    var p = ymd.split("-").map(Number);
+    var dt = new Date(Date.UTC(p[0], p[1] - 1, p[2] + n));
+    var m = String(dt.getUTCMonth() + 1).padStart(2, "0");
+    var d = String(dt.getUTCDate()).padStart(2, "0");
+    return dt.getUTCFullYear() + "-" + m + "-" + d;
+  }
+
+  function daysBetween(a, b) {
+    var pa = a.split("-").map(Number);
+    var pb = b.split("-").map(Number);
+    var ta = Date.UTC(pa[0], pa[1] - 1, pa[2]);
+    var tb = Date.UTC(pb[0], pb[1] - 1, pb[2]);
+    return Math.round((tb - ta) / 86400000);
+  }
+
+  function weekdayIndex(ymd) {
+    var p = ymd.split("-").map(Number);
+    return new Date(Date.UTC(p[0], p[1] - 1, p[2])).getUTCDay();
+  }
+
+  function formatFull(ymd) {
+    var p = ymd.split("-").map(Number);
+    return p[1] + "月" + p[2] + "日（" + WEEKDAYS[weekdayIndex(ymd)] + "）";
+  }
+
+  function formatMD(ymd) {
+    var p = ymd.split("-").map(Number);
+    return p[1] + "月" + p[2] + "日";
+  }
+
+  function formatTime(iso) {
+    var parts = new Intl.DateTimeFormat("ja-JP", {
+      timeZone: "Asia/Tokyo",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23"
+    }).formatToParts(new Date(iso));
+    var h = "00";
+    var m = "00";
+    parts.forEach(function (part) {
+      if (part.type === "hour") h = part.value;
+      if (part.type === "minute") m = part.value;
+    });
+    return h + ":" + m;
+  }
+
+  function missionFor(ymd) {
+    var diff = daysBetween(EPOCH, ymd);
+    var i = ((diff % MISSIONS.length) + MISSIONS.length) % MISSIONS.length;
+    return MISSIONS[i];
+  }
+
+  function weekDates(ymd) {
+    var mondayIndex = (weekdayIndex(ymd) + 6) % 7;
+    var start = addDays(ymd, -mondayIndex);
+    var dates = [];
+    for (var i = 0; i < 7; i++) dates.push(addDays(start, i));
+    return dates;
+  }
+
+  function streakOf(days, ymd) {
+    var cursor = ymd;
+    var todayStatus = days[cursor] && days[cursor].status;
+    if (todayStatus !== "done") cursor = addDays(cursor, -1);
+    var count = 0;
+    while (days[cursor] && days[cursor].status === "done") {
+      count += 1;
+      cursor = addDays(cursor, -1);
+    }
+    return count;
+  }
+
+  function weekDoneCount(days, ymd) {
+    return weekDates(ymd).filter(function (day) {
+      return days[day] && days[day].status === "done";
+    }).length;
+  }
+
+  function recordingOn(ymd) {
+    for (var i = state.recordings.length - 1; i >= 0; i--) {
+      if (state.recordings[i].date === ymd) return state.recordings[i];
+    }
+    return null;
+  }
+
+  function weekRecordings() {
+    var set = {};
+    weekDates(today).forEach(function (day) { set[day] = true; });
+    return state.recordings
+      .filter(function (rec) { return set[rec.date]; })
+      .slice()
+      .sort(function (a, b) {
+        if (a.date === b.date) return a.timestamp < b.timestamp ? 1 : -1;
+        return a.date < b.date ? 1 : -1;
+      });
+  }
+
+  function esc(value) {
+    return String(value).replace(/[&<>"']/g, function (ch) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch];
+    });
+  }
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return emptyState();
+      var data = JSON.parse(raw);
+      if (!data || data.version !== 1 || typeof data.days !== "object" || !data.days) {
+        return emptyState();
+      }
+      var recordings = Array.isArray(data.recordings) ? data.recordings.filter(function (rec) {
+        return rec && rec.id && rec.date && rec.timestamp && rec.dataUrl;
+      }) : [];
+      return { days: data.days, recordings: recordings };
+    } catch (e) {
+      return emptyState();
+    }
+  }
+
+  function prune(next) {
+    var minRec = addDays(today, -21);
+    var minDay = addDays(today, -120);
+    next.recordings = next.recordings.filter(function (rec) { return rec.date >= minRec; });
+    Object.keys(next.days).forEach(function (day) {
+      if (day < minDay) delete next.days[day];
+    });
+  }
+
+  function serialize(next) {
+    return {
+      version: 1,
+      days: next.days,
+      recordings: next.recordings.map(function (rec) {
+        return {
+          id: rec.id,
+          date: rec.date,
+          timestamp: rec.timestamp,
+          missionId: rec.missionId,
+          missionTitle: rec.missionTitle,
+          mimeType: rec.mimeType,
+          dataUrl: rec.dataUrl,
+          blobUrl: blobUrlCache.get(rec.id) || rec.blobUrl || ""
+        };
+      })
+    };
+  }
+
+  // blob: URLs die on reload, so the audio bytes live in dataUrl.
+  // On load we recreate blobUrl for playback and keep timestamp beside it.
+  function persist(next) {
+    localStorage.setItem(KEY, JSON.stringify(serialize(next)));
+  }
+
+  function dataUrlToBlob(dataUrl) {
+    var comma = dataUrl.indexOf(",");
+    var head = dataUrl.slice(0, comma);
+    var body = dataUrl.slice(comma + 1);
+    var mimeMatch = head.match(/^data:([^;,]+)/);
+    var mime = (mimeMatch && mimeMatch[1]) || "application/octet-stream";
+    var binary = atob(body);
+    var bytes = new Uint8Array(binary.length);
+    for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new Blob([bytes], { type: mime });
+  }
+
+  function urlFor(rec) {
+    var cached = blobUrlCache.get(rec.id);
+    if (cached) return cached;
+    try {
+      if (rec.dataUrl) {
+        var url = URL.createObjectURL(dataUrlToBlob(rec.dataUrl));
+        blobUrlCache.set(rec.id, url);
+        rec.blobUrl = url;
+        return url;
+      }
+    } catch (e) {}
+    return rec.blobUrl || "";
+  }
+
+  function blobToDataUrl(blob) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = function () { reject(reader.error || new Error("read")); };
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  function readDuration(blob) {
+    return new Promise(function (resolve) {
+      var url = URL.createObjectURL(blob);
+      var audio = document.createElement("audio");
+      var settled = false;
+      function done(value) {
+        if (settled) return;
+        settled = true;
+        URL.revokeObjectURL(url);
+        resolve(value);
+      }
+      var timer = setTimeout(function () { done(null); }, 2000);
+      audio.preload = "metadata";
+      audio.onloadedmetadata = function () {
+        clearTimeout(timer);
+        done(Number.isFinite(audio.duration) ? audio.duration : null);
+      };
+      audio.onerror = function () {
+        clearTimeout(timer);
+        done(null);
+      };
+      audio.src = url;
+    });
+  }
+
+  function chooseMime() {
+    if (!window.MediaRecorder || !MediaRecorder.isTypeSupported) return "";
+    var types = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/aac"];
+    for (var i = 0; i < types.length; i++) {
+      if (MediaRecorder.isTypeSupported(types[i])) return types[i];
+    }
+    return "";
+  }
+
+  function createRecorder(stream) {
+    var mime = chooseMime();
+    var attempts = [];
+    if (mime) attempts.push({ mimeType: mime, audioBitsPerSecond: 24000 });
+    if (mime) attempts.push({ mimeType: mime });
+    attempts.push({ audioBitsPerSecond: 24000 });
+    attempts.push(null);
+    var lastError = null;
+    for (var i = 0; i < attempts.length; i++) {
+      try {
+        return attempts[i] ? new MediaRecorder(stream, attempts[i]) : new MediaRecorder(stream);
+      } catch (e) {
+        lastError = e;
+      }
+    }
+    throw lastError || new Error("recorder");
+  }
+
+  function stopStream() {
+    if (!recordStream) return;
+    recordStream.getTracks().forEach(function (track) { track.stop(); });
+    recordStream = null;
+  }
+
+  function haltRecorder() {
+    if (recordTick) {
+      clearInterval(recordTick);
+      recordTick = null;
+    }
+    var rec = mediaRecorder;
+    mediaRecorder = null;
+    if (rec && rec.state !== "inactive") {
+      rec.onstop = function () { stopStream(); };
+      try { rec.stop(); } catch (e) { stopStream(); }
+    } else {
+      stopStream();
+    }
+  }
+
+  function say(text) {
+    var live = document.getElementById("live");
+    if (live) live.textContent = text;
+  }
+
+  function updateTimer() {
+    var clamped = Math.min(MAX_MS, Math.max(0, elapsedMs));
+    var sec = Math.floor(clamped / 1000);
+    var clock = document.getElementById("rec-clock");
+    var ring = document.getElementById("rec-ring");
+    var remain = document.getElementById("rec-remain");
+    if (clock) clock.textContent = "0:" + String(sec).padStart(2, "0") + " / 0:30";
+    if (ring) ring.style.setProperty("--p", String(clamped / MAX_MS));
+    if (remain) {
+      var left = Math.max(0, 30 - sec);
+      remain.textContent = left === 0 ? "30秒たちました" : "残り" + left + "秒";
+    }
+  }
+
+  async function startRecording() {
+    haltRecorder();
+    var myTake = ++takeSeq;
+    errorMsg = "";
+    successMsg = "";
+    skipConfirm = false;
+    tab = "record";
+    recMode = "arming";
+    render();
+    if (!navigator.mediaDevices || !window.MediaRecorder) {
+      recMode = "idle";
+      errorMsg = "この端末ではマイク録音ができません。音声ファイルを選んで完了できます。";
+      render();
+      return;
+    }
+    try {
+      recordStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      if (myTake !== takeSeq) {
+        stopStream();
+        return;
+      }
+      var recorder = createRecorder(recordStream);
+      chunks = [];
+      recorder.ondataavailable = function (event) {
+        if (event.data && event.data.size) chunks.push(event.data);
+      };
+      recorder.onstop = function () {
+        if (myTake !== takeSeq) {
+          stopStream();
+          return;
+        }
+        finishRecording(recorder.mimeType || "audio/webm");
+      };
+      recorder.start(250);
+      mediaRecorder = recorder;
+      recordStarted = Date.now();
+      elapsedMs = 0;
+      recMode = "recording";
+      render();
+      say("録音を始めました。30秒で止まります。");
+      recordTick = setInterval(function () {
+        elapsedMs = Date.now() - recordStarted;
+        if (elapsedMs >= MAX_MS) {
+          elapsedMs = MAX_MS;
+          updateTimer();
+          stopRecording();
+          return;
+        }
+        updateTimer();
+      }, 200);
+    } catch (e) {
+      if (myTake !== takeSeq) return;
+      stopStream();
+      recMode = "idle";
+      errorMsg = "マイクを使えませんでした。音声ファイルを選んで完了できます。";
+      render();
+    }
+  }
+
+  function stopRecording() {
+    if (!mediaRecorder || mediaRecorder.state !== "recording") return;
+    elapsedMs = Date.now() - recordStarted;
+    if (recordTick) {
+      clearInterval(recordTick);
+      recordTick = null;
+    }
+    try { mediaRecorder.stop(); } catch (e) {}
+  }
+
+  function finishRecording(mime) {
+    stopStream();
+    mediaRecorder = null;
+    var blob = new Blob(chunks, { type: mime || "audio/webm" });
+    chunks = [];
+    if (!blob.size || elapsedMs < 800) {
+      recMode = "idle";
+      errorMsg = elapsedMs < 800
+        ? "もう少し長く録ってください。"
+        : "録音できませんでした。もう一度試すか、音声ファイルを選んでください。";
+      render();
+      return;
+    }
+    stagePreview(blob, "");
+  }
+
+  function stagePreview(blob, name) {
+    if (pendingUrl) URL.revokeObjectURL(pendingUrl);
+    pendingBlob = blob;
+    pendingUrl = URL.createObjectURL(blob);
+    pendingName = name || "";
+    recMode = "preview";
+    errorMsg = "";
+    tab = "record";
+    render();
+    say("録音できました。よければ完了にしてください。");
+  }
+
+  async function stageFile(file) {
+    if (!file) return;
+    haltRecorder();
+    takeSeq += 1;
+    var name = file.name || "音声ファイル";
+    var looksAudio = (file.type && file.type.indexOf("audio/") === 0) ||
+      /\.(webm|mp3|m4a|wav|aac|ogg|mp4|mpeg)$/i.test(name);
+    if (!looksAudio) {
+      errorMsg = "音声ファイルを選んでください。";
+      recMode = "idle";
+      render();
+      return;
+    }
+    if (file.size > 900000) {
+      errorMsg = "ファイルが大きすぎます。30秒くらいの音声にしてください。";
+      recMode = "idle";
+      render();
+      return;
+    }
+    if (file.size < 100) {
+      errorMsg = "ファイルが空のようです。別の音声を選んでください。";
+      recMode = "idle";
+      render();
+      return;
+    }
+    var duration = await readDuration(file);
+    if (duration == null && !(file.type && file.type.indexOf("audio/") === 0)) {
+      errorMsg = "このファイルは再生できません。別の音声を選んでください。";
+      recMode = "idle";
+      render();
+      return;
+    }
+    if (duration != null && duration > 35) {
+      errorMsg = "35秒を超えています。30秒くらいの音声にしてください。";
+      recMode = "idle";
+      render();
+      return;
+    }
+    if (duration != null && duration < 0.4) {
+      errorMsg = "音声が短すぎます。30秒くらいにしてください。";
+      recMode = "idle";
+      render();
+      return;
+    }
+    stagePreview(file, name);
+  }
+
+  async function commitPending() {
+    if (saving || !pendingBlob) return;
+    saving = true;
+    errorMsg = "";
+    render();
+    try {
+      var dataUrl = await blobToDataUrl(pendingBlob);
+      if (typeof dataUrl !== "string" || dataUrl.length > 1400000) {
+        errorMsg = "音声が大きすぎます。30秒くらいの短い音声にしてください。";
+        return;
+      }
+      var mission = missionFor(today);
+      var timestamp = new Date().toISOString();
+      var rec = {
+        id: "r_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8),
+        date: today,
+        timestamp: timestamp,
+        missionId: mission.id,
+        missionTitle: mission.title,
+        mimeType: pendingBlob.type || "audio/webm",
+        dataUrl: dataUrl,
+        blobUrl: pendingUrl
+      };
+      var next = { days: Object.assign({}, state.days), recordings: state.recordings.slice() };
+      var replaced = next.recordings.filter(function (old) { return old.date === today; });
+      next.recordings = next.recordings.filter(function (old) { return old.date !== today; });
+      next.recordings.push(rec);
+      next.days[today] = {
+        status: "done",
+        missionId: mission.id,
+        missionTitle: mission.title,
+        updatedAt: timestamp
+      };
+      prune(next);
+      persist(next);
+      replaced.forEach(function (old) {
+        var cached = blobUrlCache.get(old.id);
+        if (cached && cached !== pendingUrl) URL.revokeObjectURL(cached);
+        blobUrlCache.delete(old.id);
+      });
+      blobUrlCache.set(rec.id, pendingUrl);
+      pendingUrl = "";
+      pendingBlob = null;
+      pendingName = "";
+      state = next;
+      recMode = "idle";
+      tab = "today";
+      successMsg = "録音を保存しました。今日の1手は完了です。";
+      say(successMsg);
+    } catch (e) {
+      errorMsg = "保存できませんでした。録音を短くしてもう一度試してください。";
+    } finally {
+      saving = false;
+      render();
+    }
+  }
+
+  function skipToday() {
+    var mission = missionFor(today);
+    var next = { days: Object.assign({}, state.days), recordings: state.recordings.slice() };
+    next.days[today] = {
+      status: "skipped",
+      missionId: mission.id,
+      missionTitle: mission.title,
+      updatedAt: new Date().toISOString()
+    };
+    try {
+      persist(next);
+    } catch (e) {
+      errorMsg = "保存できませんでした。もう一度試してください。";
+      skipConfirm = false;
+      render();
+      return;
+    }
+    state = next;
+    skipConfirm = false;
+    successMsg = "";
+    say("今日はスキップしました。明日の1手は、日付が変わると自動で出ます。");
+    render();
+  }
+
+  function undoSkip() {
+    if (!state.days[today] || state.days[today].status !== "skipped") return;
+    var next = { days: Object.assign({}, state.days), recordings: state.recordings.slice() };
+    delete next.days[today];
+    try {
+      persist(next);
+    } catch (e) {
+      errorMsg = "保存できませんでした。もう一度試してください。";
+      render();
+      return;
+    }
+    state = next;
+    render();
+  }
+
+  function redo() {
+    if (pendingUrl) URL.revokeObjectURL(pendingUrl);
+    pendingUrl = "";
+    pendingBlob = null;
+    pendingName = "";
+    recMode = "idle";
+    errorMsg = "";
+    render();
+  }
+
+  function setTab(name) {
+    if (tab === name) return;
+    tab = name;
+    successMsg = "";
+    errorMsg = "";
+    if (name !== "today") skipConfirm = false;
+    render();
+  }
+
+  async function togglePlay(targetId) {
+    var audio = document.getElementById(targetId);
+    if (!audio || !audio.src) {
+      errorMsg = "この録音は再生できません。";
+      render();
+      return;
+    }
+    document.querySelectorAll("audio").forEach(function (other) {
+      if (other !== audio && !other.paused) other.pause();
+    });
+    try {
+      if (audio.paused) await audio.play();
+      else audio.pause();
+    } catch (e) {
+      errorMsg = "再生できませんでした。";
+      render();
+    }
+  }
+
+  function bindMedia() {
+    document.querySelectorAll("audio[data-rec-id]").forEach(function (el) {
+      var rec = null;
+      for (var i = 0; i < state.recordings.length; i++) {
+        if (state.recordings[i].id === el.getAttribute("data-rec-id")) rec = state.recordings[i];
+      }
+      if (!rec || el.getAttribute("src")) return;
+      var url = urlFor(rec);
+      if (url) el.src = url;
+    });
+    var preview = document.querySelector("audio[data-preview]");
+    if (preview && pendingUrl && !preview.getAttribute("src")) preview.src = pendingUrl;
+    document.querySelectorAll("audio[id]").forEach(function (audio) {
+      var sync = function () {
+        var btn = document.querySelector('[data-target="' + audio.id + '"]');
+        if (!btn) return;
+        var on = !audio.paused && !audio.ended;
+        btn.textContent = on ? "停止" : "再生";
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+      };
+      audio.addEventListener("play", sync);
+      audio.addEventListener("pause", sync);
+      audio.addEventListener("ended", sync);
+    });
+  }
+
+  function syncTabs() {
+    ["today", "record", "review"].forEach(function (name) {
+      var el = document.getElementById("tab-" + name);
+      var on = tab === name;
+      el.setAttribute("aria-selected", on ? "true" : "false");
+      el.tabIndex = on ? 0 : -1;
+      el.classList.toggle("is-recording", name === "record" && recMode === "recording");
+    });
+  }
+
+  function clipBlock(rec, prefix, compact) {
+    var audioId = prefix + "-" + rec.id;
+    var info = compact
+      ? '<div class="meta">' + esc(formatTime(rec.timestamp)) + "</div>"
+      : '<div><strong>' + esc(rec.missionTitle) + "</strong>" +
+        '<div class="meta">' + esc(formatFull(rec.date) + " " + formatTime(rec.timestamp)) + "</div></div>";
+    return (
+      '<div class="clip">' +
+        '<div class="clip-top">' +
+          '<button type="button" class="play-btn" data-action="toggle-play" data-target="' + audioId + '" aria-pressed="false">再生</button>' +
+          info +
+        "</div>" +
+        '<audio id="' + audioId + '" data-rec-id="' + esc(rec.id) + '" controls preload="none" aria-label="録音を再生"></audio>' +
+      "</div>"
+    );
+  }
+
+  function renderToday() {
+    var mission = missionFor(today);
+    var day = state.days[today];
+    var status = day ? day.status : "open";
+    var streak = streakOf(state.days, today);
+    var weekCount = weekDoneCount(state.days, today);
+    var html = "";
+    if (successMsg) html += '<p class="banner" role="status">' + esc(successMsg) + "</p>";
+    if (errorMsg) html += '<p class="banner bad" role="alert">' + esc(errorMsg) + "</p>";
+    html += '<p class="date-line">' + esc(formatFull(today)) + "</p>";
+    html += '<article class="card" data-today-status="' + status + '">';
+    html += '<div class="kicker-row"><p class="kicker">今日の1手</p><span class="timer-pill">30秒</span></div>';
+    html += '<h2 class="mission-title" data-testid="mission-title" data-mission-id="' + esc(mission.id) + '">' + esc(mission.title) + "</h2>";
+    html += "<p class=\"detail\">" + esc(mission.detail) + "</p>";
+    html += '<p class="source">チェックシート「' + esc(mission.source) + "」</p>";
+    if (status === "done") {
+      html += '<p class="banner" role="status">今日の1手は完了です。明日の1手は、日付が変わると自動で出ます。</p>';
+      var doneRec = recordingOn(today);
+      if (doneRec) html += clipBlock(doneRec, "done", true);
+    } else if (status === "skipped") {
+      html += '<p class="banner warn" role="status">今日はスキップしました。明日の1手は、日付が変わると自動で出ます。</p>';
+    }
+    html += "</article>";
+    html += '<div class="stats">';
+    html += '<div class="stat"><span>連続日数</span><b data-testid="streak">' + streak + "日</b></div>";
+    html += '<div class="stat"><span>今週やった回数</span><b data-testid="week-count">' + weekCount + "回</b></div>";
+    html += "</div>";
+    html += '<div class="card week-card"><p>今週</p><div class="day-tracker">';
+    weekDates(today).forEach(function (dayKey) {
+      var st = state.days[dayKey] && state.days[dayKey].status;
+      var cls = "dot";
+      if (st === "done") cls += " done";
+      if (st === "skipped") cls += " skipped";
+      if (dayKey === today) cls += " is-today";
+      var label = formatFull(dayKey) + (st === "done" ? " やった" : st === "skipped" ? " スキップ" : " まだ");
+      html += '<div class="' + cls + '" aria-label="' + esc(label) + '">' + WEEKDAYS[weekdayIndex(dayKey)] + "</div>";
+    });
+    html += "</div></div>";
+    if (status !== "done") {
+      html += '<button type="button" class="btn btn-primary" data-action="record-start">録音して完了</button>';
+      if (status === "skipped") {
+        html += '<button type="button" class="btn btn-secondary" data-action="undo-skip">やっぱり今日やる</button>';
+      } else if (skipConfirm) {
+        html += '<p class="hint">今日をスキップすると、明日の1手は日付が変わってから出ます。</p>';
+        html += '<button type="button" class="btn btn-secondary" data-action="skip-yes">スキップする</button>';
+        html += '<button type="button" class="btn btn-ghost" data-action="skip-no">もどる</button>';
+      } else {
+        html += '<button type="button" class="btn btn-secondary" data-action="skip">スキップ（明日へ）</button>';
+      }
+    } else {
+      html += '<button type="button" class="btn btn-secondary" data-action="rerecord">録り直す</button>';
+    }
+    if (status === "open") {
+      html += '<p class="hint">明日の1手は、日付が変わると自動で出ます。講師の確認は、週に1回で大丈夫です。</p>';
+    }
+    return html;
+  }
+
+  function renderRecord() {
+    var html = "<h2>録音</h2>";
+    html += '<p class="note">30秒で止まります。マイクが使えないときは、音声ファイルでも完了できます。</p>';
+    if (errorMsg) html += '<p class="banner bad" role="alert">' + esc(errorMsg) + "</p>";
+    if (state.days[today] && state.days[today].status === "done" && recMode === "idle") {
+      html += '<p class="banner warn">今日の1手は完了済みです。録り直すと、今日の録音は新しいほうだけ残ります。</p>';
+    }
+    if (recMode === "arming") {
+      html += '<div class="rec-stage"><div class="ring" id="rec-ring"><button type="button" class="orb" disabled>準備中</button></div>';
+      html += '<p class="clock" id="rec-clock">0:00 / 0:30</p>';
+      html += '<p class="remain" id="rec-remain">マイクを準備しています</p></div>';
+    } else if (recMode === "preview") {
+      html += '<article class="card">';
+      html += "<p><strong>聴いてみて、よければ完了です。</strong></p>";
+      if (pendingName) html += '<p class="source">' + esc(pendingName) + "</p>";
+      html += '<audio data-preview="1" controls preload="metadata" aria-label="録った音声を確認"></audio>';
+      html += '<button type="button" class="btn btn-primary" data-action="commit"' + (saving ? " disabled" : "") + ">" + (saving ? "保存しています…" : "この録音で完了") + "</button>";
+      html += '<button type="button" class="btn btn-secondary" data-action="redo"' + (saving ? " disabled" : "") + ">やり直す</button>";
+      html += "</article>";
+    } else {
+      var live = recMode === "recording";
+      html += '<div class="rec-stage">';
+      html += '<div class="ring" id="rec-ring"><button type="button" class="orb' + (live ? " live" : "") + '" data-action="' + (live ? "record-stop" : "record-start") + '" aria-pressed="' + (live ? "true" : "false") + '">' + (live ? "停止" : "録音開始") + "</button></div>";
+      html += '<p class="clock" id="rec-clock">0:00 / 0:30</p>';
+      html += '<p class="remain" id="rec-remain">' + (live ? "残り30秒" : "ボタンを押すと始まります") + "</p>";
+      html += "</div>";
+      if (!live) {
+        html += '<div class="divider">または</div>';
+        html += '<label class="btn btn-secondary file-label">音声ファイルを選ぶ<input id="file-input" type="file" accept="audio/*,.mp3,.m4a,.wav,.webm,.aac,.ogg,.mp4"></label>';
+      }
+    }
+    var todays = state.recordings.filter(function (rec) { return rec.date === today; });
+    html += '<h3 class="list-title">今日の録音</h3>';
+    if (!todays.length) html += '<p class="empty">今日の録音はまだありません。</p>';
+    todays.forEach(function (rec) { html += clipBlock(rec, "today"); });
+    var week = weekRecordings();
+    html += '<h3 class="list-title">今週の録音</h3>';
+    if (!week.length) html += '<p class="empty">今週の録音はまだありません。</p>';
+    week.forEach(function (rec) { html += clipBlock(rec, "week"); });
+    return html;
+  }
+
+  function statusOf(ymd) {
+    var day = state.days[ymd];
+    if (day && (day.status === "done" || day.status === "skipped")) return day.status;
+    return "pending";
+  }
+
+  function statusText(ymd, status) {
+    if (status === "done") return "やった";
+    if (status === "skipped") return "スキップ";
+    if (ymd > today) return "これから";
+    if (ymd === today) return "まだ";
+    return "記録なし";
+  }
+
+  function renderReview() {
+    var dates = weekDates(today);
+    var count = weekDoneCount(state.days, today);
+    var recordings = weekRecordings();
+    var html = "<h2>講師の週レビュー</h2>";
+    html += '<p class="note">毎日見なくて大丈夫です。週に1回、ここだけ見れば足ります。</p>';
+    html += '<p class="week-range">' + esc(formatFull(dates[0])) + "〜" + esc(formatFull(dates[6])) + "</p>";
+    html += '<p class="summary">今週やった回数：<strong data-testid="review-count">' + count + "回</strong></p>";
+    if (!recordings.length) {
+      html += '<p class="empty" data-testid="review-empty">今週はまだ録音がありません。生徒が録音すると、その日のところに再生ボタンが出ます。</p>';
+    }
+    dates.forEach(function (ymd) {
+      var status = statusOf(ymd);
+      var stored = state.days[ymd];
+      var title = stored && stored.missionTitle ? stored.missionTitle : missionFor(ymd).title;
+      var rec = recordingOn(ymd);
+      var cls = "day-row";
+      if (ymd === today) cls += " is-today";
+      if (ymd > today) cls += " future";
+      html += '<article class="' + cls + '" data-date="' + ymd + '" data-status="' + status + '">';
+      html += '<div class="day-chip">' + WEEKDAYS[weekdayIndex(ymd)] + "</div>";
+      html += '<div class="day-body">';
+      html += '<div class="day-line"><strong>' + esc(formatMD(ymd)) + '</strong><span class="badge ' + status + '">' + statusText(ymd, status) + "</span></div>";
+      html += '<div class="mission-name">' + esc(title) + "</div>";
+      if (rec) html += clipBlock(rec, "coach", true);
+      html += "</div></article>";
+    });
+    return html;
+  }
+
+  function render() {
+    var root = document.getElementById("panels");
+    var body = tab === "record" ? renderRecord() : tab === "review" ? renderReview() : renderToday();
+    var hiddenToday = tab === "today" ? "" : " hidden";
+    var hiddenRecord = tab === "record" ? "" : " hidden";
+    var hiddenReview = tab === "review" ? "" : " hidden";
+    root.innerHTML =
+      '<section id="panel-today" class="panel" role="tabpanel" aria-labelledby="tab-today"' + hiddenToday + ">" + (tab === "today" ? body : "") + "</section>" +
+      '<section id="panel-record" class="panel" role="tabpanel" aria-labelledby="tab-record"' + hiddenRecord + ">" + (tab === "record" ? body : "") + "</section>" +
+      '<section id="panel-review" class="panel" role="tabpanel" aria-labelledby="tab-review"' + hiddenReview + ">" + (tab === "review" ? body : "") + "</section>";
+    syncTabs();
+    bindMedia();
+    if (recMode === "recording") updateTimer();
+  }
+
+  document.body.addEventListener("click", function (event) {
+    var btn = event.target.closest("[data-action]");
+    if (!btn || btn.disabled) return;
+    var action = btn.getAttribute("data-action");
+    if (action === "tab") setTab(btn.getAttribute("data-tab"));
+    else if (action === "record-start") startRecording();
+    else if (action === "record-stop") stopRecording();
+    else if (action === "commit") commitPending();
+    else if (action === "redo") redo();
+    else if (action === "skip") { skipConfirm = true; render(); }
+    else if (action === "skip-no") { skipConfirm = false; render(); }
+    else if (action === "skip-yes") skipToday();
+    else if (action === "undo-skip") undoSkip();
+    else if (action === "rerecord") { tab = "record"; recMode = "idle"; successMsg = ""; render(); }
+    else if (action === "toggle-play") togglePlay(btn.getAttribute("data-target"));
+  });
+
+  document.body.addEventListener("change", function (event) {
+    if (event.target && event.target.id === "file-input") stageFile(event.target.files && event.target.files[0]);
+  });
+
+  window.addEventListener("pagehide", function () { haltRecorder(); });
+
+  state = loadState();
+  render();
+
+  window.__sd = {
+    key: KEY,
+    missions: MISSIONS,
+    missionFor: missionFor,
+    addDays: addDays,
+    weekDates: weekDates,
+    streakOf: streakOf,
+    weekDoneCount: weekDoneCount,
+    tokyoYMD: tokyoYMD,
+    get today() { return today; },
+    get state() { return state; }
+  };
+})();
+</script>
+</body>
+</html>
